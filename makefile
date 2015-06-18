@@ -1,5 +1,5 @@
 all: client server
 client: client.c
-	gcc client.c
+	gcc -o client client.c
 server: server.c
-	gcc server.c
+	gcc -o server server.c

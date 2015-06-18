@@ -47,7 +47,7 @@ int main() {
   // read from host
   recv(clientSocket, in_buffer, 1024, 0);
 
-  printf("Data received from server: %s", in_buffer);
+  printf("Data received from server: '%s'\n", in_buffer);
 
 
 
