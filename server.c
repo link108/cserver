@@ -1,5 +1,7 @@
 // by cmotevasselani
 // Basic test server
+
+// TODO what to replace stdio with? 
 #include<stdio.h>
 #include<stdbool.h>
 #include<string.h>
@@ -13,24 +15,21 @@
 void handle_request(int socket, char* key, char* value) {
   char out_buffer[1024];
   if (!strcmp(key, "decrement")) {
+    int number_to_decrement = atoi(value);
     char* message_format = "you just sent: %d";
-    sprintf(out_buffer, message_format, atoi(value));
-    printf("outbuff: %s", out_buffer);
+    sprintf(out_buffer, message_format, number_to_decrement);
     // why is atoi bad and how to fix? strtol was not working with: (int)strtol(value, .., 10)
-    printf("value as int: %d\n", atoi(value));
   } else {
-    //strcpy(out_buffer, "Hello World\n");
+    //strcpy(out_buffer, "Hello World");
     sprintf(out_buffer, "Hello World");
   }
   send(socket, out_buffer, sizeof(out_buffer), 0);
 }
 
-
-
-
-
-void intHandler(int handle_this) {
-  close(7891);
+void intHandler(int handle_this, int socket_to_close) {
+  // dont think this does what I intend it to do.. close the port
+  //printf("closing: %d\n", socket_to_close);
+  //close(socket_to_close);
   exit(0);
 }
 
@@ -43,9 +42,9 @@ int main() {
   socklen_t addr_size;
 
 
-  signal(SIGINT, intHandler);
   // set up socket, call to socket returns a file descriptor (fd)
   welcomeSocket = socket(AF_INET, SOCK_STREAM, 0);
+  signal(SIGINT, intHandler);
 
   // TODO: Pull this into a separate file
   // set up serverAddr struct
@@ -83,10 +82,6 @@ int main() {
     handle_request(newSocket, key, value);
 
   } while(true);
-
-
-
-
   return 0;
 }
 
