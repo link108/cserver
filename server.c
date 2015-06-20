@@ -10,6 +10,8 @@
 #include<netinet/in.h>
 #include<arpa/inet.h>
 #include "utils.h"
+#include<signal.h>
+
 
 
 void handle_request(int socket, char* key, char* value) {
