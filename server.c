@@ -9,6 +9,7 @@
 #include<sys/socket.h>
 #include<netinet/in.h>
 #include<arpa/inet.h>
+#include<signal.h>
 
 
 
@@ -26,7 +27,7 @@ void handle_request(int socket, char* key, char* value) {
   send(socket, out_buffer, sizeof(out_buffer), 0);
 }
 
-void intHandler(int handle_this, int socket_to_close) {
+void intHandler(int handle_this) {
   // dont think this does what I intend it to do.. close the port
   //printf("closing: %d\n", socket_to_close);
   //close(socket_to_close);
