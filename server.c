@@ -54,7 +54,7 @@ int main() {
 //  serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
 //  memset(serverAddr.sin_zero, '\0', sizeof(serverAddr.sin_zero));
 //  bind(welcomeSocket, (struct sockaddr *) &serverAddr, sizeof(serverAddr));
-  createSockaddr_in(&serverAddr, SERVER_PORT, "127.0.0.1");
+  byah(&serverAddr, SERVER_PORT, "127.0.0.1");
   bind(welcomeSocket, (struct sockaddr *) &serverAddr, sizeof(serverAddr));
 
 

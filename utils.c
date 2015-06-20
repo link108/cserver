@@ -1,15 +1,11 @@
 // by cmotevasselani
 
-#include<stdio.h>
-#include<stdbool.h>
-#include<string.h>
-#include<stdlib.h>
 #include<sys/socket.h>
 #include<netinet/in.h>
 #include<arpa/inet.h>
 #include "utils.h"
 
-void createSockaddr_in(struct sockaddr_in* serverAddr, int port, char* ipv4) {
+void byah(struct sockaddr_in* serverAddr, int port, char* ipv4) {
   serverAddr.sin_family = AF_INET;
   serverAddr.sin_port = htons(port);
   serverAddr.sin_addr.s_addr = inet_addr(ipv4);
