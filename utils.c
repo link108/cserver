@@ -12,7 +12,6 @@ void byah(struct sockaddr_in* serverAddr, int port, char* ipv4) {
   memset(serverAddr.sin_zero, '\0', sizeof(serverAddr.sin_zero));
 }
 
-
 //void handle_request(int socket, char* key, char* value) {
 //  char out_buffer[1024];
 //  if (!strcmp(key, "decrement")) {
@@ -42,3 +41,4 @@ void byah(struct sockaddr_in* serverAddr, int port, char* ipv4) {
 //  memset(serverAddr.sin_zero, '\0', sizeof(serverAddr.sin_zero));
 //  return &serverAddr;
 //}
+
