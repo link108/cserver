@@ -18,7 +18,7 @@ int main() {
   char in_buffer[1024], out_buffer[1024];
   struct sockaddr_in serverAddr;
   socklen_t addr_size;
-  char *message_format = "decrement:%d\n";
+  char *message_format = "decrement:%d";
   char message[1024];
 
   // set up data to send
