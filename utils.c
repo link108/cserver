@@ -41,4 +41,3 @@ void byah(struct sockaddr_in* serverAddr, int port, char* ipv4) {
 //  memset(serverAddr.sin_zero, '\0', sizeof(serverAddr.sin_zero));
 //  return &serverAddr;
 //}
-
