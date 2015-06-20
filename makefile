@@ -1,5 +1,8 @@
+CC=gcc
+CFLAGS=-Wall
+
 all: client server
-client: client.c
-	gcc -o client client.c
-server: server.c
-	gcc -o server server.c
+client: client.c utils.c
+	$(CC) $(CFLAGS) -o client client.c utils.c
+server: server.c utils.c
+	$(CC) $(CFLAGS) -o server server.c utils.c

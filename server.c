@@ -10,15 +10,16 @@
 #include<netinet/in.h>
 #include<arpa/inet.h>
 #include<signal.h>
-
-
+#include "utils.h"
+#include<signal.h>
+#include "utils.h"
 
 void handle_request(int socket, char* key, char* value) {
   char out_buffer[1024];
   if (!strcmp(key, "decrement")) {
     int number_to_decrement = atoi(value);
-    char* message_format = "you just sent: %d";
-    sprintf(out_buffer, message_format, number_to_decrement);
+    char* message_format = "decrement:%d";
+    sprintf(out_buffer, message_format, number_to_decrement - 1);
     // why is atoi bad and how to fix? strtol was not working with: (int)strtol(value, .., 10)
   } else {
     //strcpy(out_buffer, "Hello World");
@@ -37,7 +38,7 @@ void intHandler(int handle_this) {
 int main() {
   static const int SERVER_PORT = 7891;
   int welcomeSocket, newSocket;
-  char out_buffer[1024], in_buffer[1024];
+  char in_buffer[1024];
   struct sockaddr_in serverAddr;
   struct sockaddr_storage serverStorage;
   socklen_t addr_size;
@@ -49,10 +50,8 @@ int main() {
 
   // TODO: Pull this into a separate file
   // set up serverAddr struct
-  serverAddr.sin_family = AF_INET;
-  serverAddr.sin_port = htons(SERVER_PORT);
-  serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
-  memset(serverAddr.sin_zero, '\0', sizeof(serverAddr.sin_zero));
+
+  createSockaddr_in(&serverAddr, SERVER_PORT, "127.0.0.1");
   bind(welcomeSocket, (struct sockaddr *) &serverAddr, sizeof(serverAddr));
 
   do {
@@ -73,7 +72,7 @@ int main() {
     char* value;
     char* key;
 
-    in_buffer[strlen(in_buffer) - 1] = '\0';
+    //in_buffer[strlen(in_buffer) - 1] = '\0';
     printf("received: '%s' from client\n", in_buffer);
 
     colon_pos = (int)(strchr(in_buffer, ':') - in_buffer);
