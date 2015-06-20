@@ -12,7 +12,6 @@
 #include "utils.h"
 
 
-
 void handle_request(int socket, char* key, char* value) {
   char out_buffer[1024];
   if (!strcmp(key, "decrement")) {
@@ -38,7 +37,7 @@ int main() {
   static const int SERVER_PORT = 7891;
   int welcomeSocket, newSocket;
   char in_buffer[1024];
-  struct sockaddr_in* serverAddr;
+  struct sockaddr_in serverAddr;
   struct sockaddr_storage serverStorage;
   socklen_t addr_size;
 
@@ -55,8 +54,8 @@ int main() {
 //  serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
 //  memset(serverAddr.sin_zero, '\0', sizeof(serverAddr.sin_zero));
 //  bind(welcomeSocket, (struct sockaddr *) &serverAddr, sizeof(serverAddr));
-  serverAddr = createSockaddr_in(SERVER_PORT, "127.0.0.1");
-  bind(welcomeSocket, (struct sockaddr *) serverAddr, sizeof(serverAddr));
+  createSockaddr_in(&serverAddr, SERVER_PORT, "127.0.0.1");
+  bind(welcomeSocket, (struct sockaddr *) &serverAddr, sizeof(serverAddr));
 
 
   do {
