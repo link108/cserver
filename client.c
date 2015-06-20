@@ -6,6 +6,7 @@
 #include<netinet/in.h>
 #include<arpa/inet.h>
 #include<errno.h>
+#include "utils.h"
 
 void error(const char* msg) {
   perror(msg);
@@ -29,11 +30,8 @@ int main() {
   // set up socket
   clientSocket = socket(AF_INET, SOCK_STREAM, 0);
 
-  // set up serverAddr struct
-  serverAddr.sin_family = AF_INET;
-  serverAddr.sin_port = htons(SERVER_PORT);
-  serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
-  memset(serverAddr.sin_zero, '\0', sizeof(serverAddr.sin_zero));
+  createSockaddr_in(&serverAddr, SERVER_PORT, "127.0.0.1");
+
 
   // Connect to socket
   addr_size = sizeof(serverAddr);

@@ -50,12 +50,7 @@ int main() {
   // TODO: Pull this into a separate file
   // set up serverAddr struct
 
-//  serverAddr.sin_family = AF_INET;
-//  serverAddr.sin_port = htons(SERVER_PORT);
-//  serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
-//  memset(serverAddr.sin_zero, '\0', sizeof(serverAddr.sin_zero));
-//  bind(welcomeSocket, (struct sockaddr *) &serverAddr, sizeof(serverAddr));
-  byah(&serverAddr, SERVER_PORT, "127.0.0.1");
+  createSockaddr_in(&serverAddr, SERVER_PORT, "127.0.0.1");
   bind(welcomeSocket, (struct sockaddr *) &serverAddr, sizeof(serverAddr));
 
   do {
