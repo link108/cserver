@@ -14,22 +14,8 @@
 #include<signal.h>
 #include "utils.h"
 
-void handle_request(int socket, char* key, char* value) {
-  char out_buffer[1024];
-  if (!strcmp(key, "decrement")) {
-    int number_to_decrement = atoi(value);
-    char* message_format = "decrement:%d";
-    sprintf(out_buffer, message_format, number_to_decrement - 1);
-    // why is atoi bad and how to fix? strtol was not working with: (int)strtol(value, .., 10)
-  } else {
-    //strcpy(out_buffer, "Hello World");
-    sprintf(out_buffer, "Hello World");
-  }
-  send(socket, out_buffer, sizeof(out_buffer), 0);
-}
-
+// dont think this does what I intend it to do.. close the port
 void intHandler(int handle_this) {
-  // dont think this does what I intend it to do.. close the port
   //printf("closing: %d\n", socket_to_close);
   //close(socket_to_close);
   exit(0);
@@ -37,7 +23,7 @@ void intHandler(int handle_this) {
 
 int main() {
   static const int SERVER_PORT = 7891;
-  int welcomeSocket, newSocket;
+  int welcomeSocket;
   char in_buffer[1024];
   struct sockaddr_in serverAddr;
   struct sockaddr_storage serverStorage;
@@ -48,38 +34,34 @@ int main() {
   welcomeSocket = socket(AF_INET, SOCK_STREAM, 0);
   signal(SIGINT, intHandler);
 
-  // TODO: Pull this into a separate file
-  // set up serverAddr struct
-
   createSockaddr_in(&serverAddr, SERVER_PORT, "127.0.0.1");
   bind(welcomeSocket, (struct sockaddr *) &serverAddr, sizeof(serverAddr));
 
   do {
     // max 5 connections... however only prints "Error!" if hits the limit
-    if(listen(welcomeSocket, 5) == 0) {
-      printf("Listening\n");
+    int listenWelcomeSocket = listen(welcomeSocket, 5);
+    //if(listen(welcomeSocket, 5) == 0) {
+    if(listenWelcomeSocket == 0) {
+      printf("Server Listening\n");
+      printf("welcomeSocket output: %d\n", listenWelcomeSocket);
      } else {
        printf("Error!\n");
      }
 
     // accept connection 
     addr_size = sizeof(serverStorage);
-    newSocket = accept(welcomeSocket, (struct sockaddr *) &serverAddr, &addr_size);
+    int newSocket = accept(welcomeSocket, (struct sockaddr *) &serverAddr, &addr_size);
+    printf("Accepted new socket: %d\n", newSocket);
     // receive data
-    recv(newSocket, in_buffer, 1024, 0);
+    int recvBytes = recv(newSocket, in_buffer, 1024, 0);
+    printf("Received: '%s' from client\n", in_buffer);
+    //printf("Received: %d bytes from client\n", recvBytes);
 
-    int colon_pos;
-    char* value;
-    char* key;
 
-    //in_buffer[strlen(in_buffer) - 1] = '\0';
-    printf("received: '%s' from client\n", in_buffer);
-
-    colon_pos = (int)(strchr(in_buffer, ':') - in_buffer);
-    in_buffer[colon_pos] = '\0';
-    key = &in_buffer[0];
-    value = &in_buffer[colon_pos + 1];
-    handle_request(newSocket, key, value);
+    handle_request(newSocket, in_buffer, "Server");
+    //int shutdownStatus = shutdown(newSocket, 0);
+    int shutdownStatus = close(newSocket);
+    printf("Closed socket: %d, with status: %d\n", newSocket, shutdownStatus);
 
   } while(true);
   return 0;
