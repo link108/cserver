@@ -2,6 +2,8 @@
 // Basic test server
 
 // TODO what to replace stdio with? 
+
+#include<unistd.h>
 #include<stdio.h>
 #include<stdbool.h>
 #include<string.h>
@@ -14,8 +16,11 @@
 #include<signal.h>
 #include "utils.h"
 
+static volatile int keepRunning = 1;
+
 // dont think this does what I intend it to do.. close the port
 void intHandler(int handle_this) {
+  keepRunning = 0;
   //printf("closing: %d\n", socket_to_close);
   //close(socket_to_close);
   exit(0);
@@ -28,7 +33,6 @@ int main() {
   struct sockaddr_in serverAddr;
   struct sockaddr_storage serverStorage;
   socklen_t addr_size;
-
 
   // set up socket, call to socket returns a file descriptor (fd)
   welcomeSocket = socket(AF_INET, SOCK_STREAM, 0);
@@ -55,9 +59,9 @@ int main() {
     // receive data
     int recvBytes = recv(newSocket, in_buffer, 1024, 0);
     printf("Received: '%s' from client\n", in_buffer);
-    //printf("Received: %d bytes from client\n", recvBytes);
+    printf("Received: %d bytes from client\n", recvBytes);
 
-    handle_request(newSocket, in_buffer, "Server");
+    handleRequest(newSocket, in_buffer, "Server");
     //int shutdownStatus = shutdown(newSocket, 0);
     int shutdownStatus = close(newSocket);
     printf("Closed socket: %d, with status: %d\n", newSocket, shutdownStatus);
