@@ -1,3 +1,5 @@
 .*.swp
 server
 client
+*dSYM
+tags

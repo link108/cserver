@@ -5,7 +5,7 @@ void createSockaddr_in(struct sockaddr_in*, int, char*);
 
 void handle_request(int, char[], char*);
 
-void setKeyValue(char*, char*, char[]);
+void setKeyValue(char**, char**, char[]);
 
 #endif
 

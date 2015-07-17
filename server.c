@@ -57,19 +57,14 @@ int main() {
     printf("Received: '%s' from client\n", in_buffer);
     //printf("Received: %d bytes from client\n", recvBytes);
 
-
     handle_request(newSocket, in_buffer, "Server");
     //int shutdownStatus = shutdown(newSocket, 0);
     int shutdownStatus = close(newSocket);
     printf("Closed socket: %d, with status: %d\n", newSocket, shutdownStatus);
 
   } while(true);
+  int shutdownStatus = close(welcomeSocket);
+  printf("Closed socket: %d, with status: %d\n", welcomeSocket, shutdownStatus);
+
   return 0;
 }
-
-
-
-
-
-
-

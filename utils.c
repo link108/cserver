@@ -16,14 +16,9 @@ void createSockaddr_in(struct sockaddr_in* serverAddr, int port, char* ipv4) {
 }
 
 void handle_request(int socket, char in_buffer[], char* sender) {
-  int colon_pos = (int)(strchr(in_buffer, ':') - in_buffer);
-  in_buffer[colon_pos] = '\0';
-  char* key = &in_buffer[0];
-  char* value = &in_buffer[colon_pos + 1];
-  // TODO how come this doesnt work??
-  //char* key = NULL;
-  //char* value = NULL;
-  //setKeyValue(key, value, in_buffer);
+  char* key;
+  char* value;
+  setKeyValue(&key, &value, in_buffer);
 
   char out_buffer[1024];
   if (!strcmp(key, "decrement")) {
@@ -38,18 +33,14 @@ void handle_request(int socket, char in_buffer[], char* sender) {
     sprintf(out_buffer, "Hello World");
   }
   int sentBytes = send(socket, out_buffer, sizeof(out_buffer), 0);
-  //printf("%s sent %d bytes\n", sender, sentBytes);
 
 }
 
-void setKeyValue(char* key, char* value, char in_buffer[]) {
+void setKeyValue(char** key, char** value, char in_buffer[]) {
   int colon_pos = (int)(strchr(in_buffer, ':') - in_buffer);
   in_buffer[colon_pos] = '\0';
-  // TODO how come this doesnt work??
-  //strcpy(key, &in_buffer[0]);
-  //strcpy(value, &in_buffer[colon_pos + 1]);
-  key = &in_buffer[0];
-  value = &in_buffer[colon_pos + 1];
+  *key = &in_buffer[0];
+  *value = &in_buffer[colon_pos + 1];
 }
 
 
