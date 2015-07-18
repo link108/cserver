@@ -68,20 +68,9 @@ int main() {
     handleRequest(clientSocket, in_buffer, "client");
     setKeyValue(&key, &value, temp_in_buffer);
 
-    printf("client: key: %s, value: %d\n", key, value);
-
-    //int colon_pos = (int)(strchr(in_buffer, ':') - in_buffer);
-    //in_buffer[colon_pos] = '\0';
-    //key = &in_buffer[0];
-    //value = &in_buffer[colon_pos + 1];
-
-    //printf("Key received from server: '%s'\n", key);
-    //printf("Value received from server: '%s'\n", value);
-    //setKeyValue(key, value, in_buffer);
-
-    //int shutdownStatus = shutdown(clientSocket, 0);
+    //printf("(client.c): key: %s, value: %s\n", key, value);
     int shutdownStatus = close(clientSocket);
-    printf("Closed socket: %d, with status: %d\n", clientSocket, shutdownStatus);
+    printf("(client.c) Closed socket: %d, with status: %d\n", clientSocket, shutdownStatus);
     usleep(50000);
   } while(true);
   

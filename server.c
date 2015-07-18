@@ -69,12 +69,12 @@ int main() {
     handleRequest(newSocket, in_buffer, "Server");
     //int shutdownStatus = shutdown(newSocket, 0);
     int shutdownStatus = close(newSocket);
-    printf("Closed socket: %d, with status: %d\n", newSocket, shutdownStatus);
+    printf("(server.c) Closed socket: %d, with status: %d\n", newSocket, shutdownStatus);
     usleep(50000);
 
   } while(true);
   int shutdownStatus = close(welcomeSocket);
-  printf("Closed socket: %d, with status: %d\n", welcomeSocket, shutdownStatus);
+  printf("(server.c) Closed socket: %d, with status: %d\n", welcomeSocket, shutdownStatus);
 
   return 0;
 }

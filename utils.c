@@ -35,7 +35,6 @@ void sendData(int socket, char* key, char* value, char* sender) {
   sprintf(out_buffer, message_format, key, num - 1);
   printf("%s sent: '", sender);
   printf("%s\n", out_buffer);
-  //printf("\n");
   int sentBytes = send(socket, out_buffer, strlen(out_buffer), 0);
   //printf("sent %d bytes from %s\n", sentBytes, sender);
   if (sentBytes == -1) {
