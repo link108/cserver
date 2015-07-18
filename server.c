@@ -12,9 +12,9 @@
 #include<netinet/in.h>
 #include<arpa/inet.h>
 #include<signal.h>
+#include<errno.h>
 #include "utils.h"
 #include<signal.h>
-#include "utils.h"
 
 static volatile int keepRunning = 1;
 
@@ -27,7 +27,7 @@ void intHandler(int handle_this) {
 }
 
 int main() {
-  static const int SERVER_PORT = 7891;
+  static const int SERVER_PORT = 7892;
   int welcomeSocket;
   char in_buffer[1024];
   struct sockaddr_in serverAddr;
@@ -39,7 +39,10 @@ int main() {
   signal(SIGINT, intHandler);
 
   createSockaddr_in(&serverAddr, SERVER_PORT, "127.0.0.1");
-  bind(welcomeSocket, (struct sockaddr *) &serverAddr, sizeof(serverAddr));
+  int bindStatus = bind(welcomeSocket, (struct sockaddr *) &serverAddr, sizeof(serverAddr));
+  if (bindStatus != 0) {
+    printf("error: %s\n", strerror(errno));
+  }
 
   do {
     // max 5 connections... however only prints "Error!" if hits the limit
@@ -65,6 +68,7 @@ int main() {
     //int shutdownStatus = shutdown(newSocket, 0);
     int shutdownStatus = close(newSocket);
     printf("Closed socket: %d, with status: %d\n", newSocket, shutdownStatus);
+    usleep(50000);
 
   } while(true);
   int shutdownStatus = close(welcomeSocket);

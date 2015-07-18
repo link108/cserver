@@ -17,7 +17,7 @@ void error(const char* msg) {
 }
 
 int main() {
-  static const int SERVER_PORT = 7891;
+  static const int SERVER_PORT = 7892;
   int clientSocket;
   int num_to_decrement;
   char in_buffer[1024], out_buffer[1024];
@@ -32,24 +32,31 @@ int main() {
     // set up data to send
     num_to_decrement = atoi(value);
     sprintf(message, message_format, key, num_to_decrement);
-    printf("client just sent: ");
-    printf(message_format, key, num_to_decrement);
-    printf("\n");
 
     // set up socket
     clientSocket = socket(AF_INET, SOCK_STREAM, 0);
 
     createSockaddr_in(&serverAddr, SERVER_PORT, "127.0.0.1");
-
+    printf("%s\n", "before connecting to socket");
 
     // Connect to socket
     addr_size = sizeof(serverAddr);
     if(connect(clientSocket, (struct sockaddr *) &serverAddr, addr_size) < 0) {
       error("Error connecting\n");
     }
+    printf("%s\n", "after connecting to socket");
 
     strcpy(out_buffer, message);
-    send(clientSocket, out_buffer, sizeof(out_buffer), 0);
+    printf("%s", "about to send bytes");
+    int sentBytes = send(clientSocket, out_buffer, sizeof(out_buffer), 0);
+    printf("sent %d bytes from %s\n", sentBytes, "client");
+    if (sentBytes == -1) {
+      printf("error: %s", strerror(errno));
+    }
+
+    printf("client just sent: ");
+    printf(message_format, key, num_to_decrement);
+    printf("\n");
 
     // read from host
     recv(clientSocket, in_buffer, 1024, 0);

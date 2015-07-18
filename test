@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
+
+make clean
 clear
 make
 
 echo "Testing"
 ./server &
+sleep 1
 echo
 ./client
 echo
