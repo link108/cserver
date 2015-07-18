@@ -17,18 +17,19 @@
 #include<signal.h>
 
 static volatile int keepRunning = 1;
+int welcomeSocket;
 
 // dont think this does what I intend it to do.. close the port
 void intHandler(int handle_this) {
   keepRunning = 0;
-  //printf("closing: %d\n", socket_to_close);
-  //close(socket_to_close);
+  printf("closing: %d\n", welcomeSocket);
+  close(welcomeSocket);
   exit(0);
 }
 
 int main() {
   static const int SERVER_PORT = 7892;
-  int welcomeSocket;
+  //int welcomeSocket;
   char in_buffer[1024];
   struct sockaddr_in serverAddr;
   struct sockaddr_storage serverStorage;
@@ -41,7 +42,8 @@ int main() {
   createSockaddr_in(&serverAddr, SERVER_PORT, "127.0.0.1");
   int bindStatus = bind(welcomeSocket, (struct sockaddr *) &serverAddr, sizeof(serverAddr));
   if (bindStatus != 0) {
-    printf("error: %s\n", strerror(errno));
+    printf("bind error: %s\n", strerror(errno));
+    exit(0);
   }
 
   do {

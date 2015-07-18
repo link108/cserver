@@ -20,13 +20,13 @@ int main() {
   static const int SERVER_PORT = 7892;
   int clientSocket;
   int num_to_decrement;
-  char in_buffer[1024], out_buffer[1024];
+  char in_buffer[1024], temp_in_buffer[1024], out_buffer[1024];
   struct sockaddr_in serverAddr;
   socklen_t addr_size;
   char *message_format = "%s:%d";
   char message[1024];
   char* key = "decrement";
-  char* value = "500";
+  char* value = "50";
 
   do {
     // set up data to send
@@ -47,11 +47,10 @@ int main() {
     printf("%s\n", "after connecting to socket");
 
     strcpy(out_buffer, message);
-    printf("%s", "about to send bytes");
     int sentBytes = send(clientSocket, out_buffer, sizeof(out_buffer), 0);
     printf("sent %d bytes from %s\n", sentBytes, "client");
     if (sentBytes == -1) {
-      printf("error: %s", strerror(errno));
+      printf("error: %s\n", strerror(errno));
     }
 
     printf("client just sent: ");
@@ -61,13 +60,20 @@ int main() {
     // read from host
     recv(clientSocket, in_buffer, 1024, 0);
 
+    strncpy(temp_in_buffer, in_buffer, 1024);
 
     printf("Data received from server: '%s'\n", in_buffer);
+    printf("temp data: '%s'\n", temp_in_buffer);
 
-    int colon_pos = (int)(strchr(in_buffer, ':') - in_buffer);
-    in_buffer[colon_pos] = '\0';
-    key = &in_buffer[0];
-    value = &in_buffer[colon_pos + 1];
+    handleRequest(clientSocket, in_buffer, "client");
+    setKeyValue(&key, &value, temp_in_buffer);
+
+    printf("client: key: %s, value: %d\n", key, value);
+
+    //int colon_pos = (int)(strchr(in_buffer, ':') - in_buffer);
+    //in_buffer[colon_pos] = '\0';
+    //key = &in_buffer[0];
+    //value = &in_buffer[colon_pos + 1];
 
     //printf("Key received from server: '%s'\n", key);
     //printf("Value received from server: '%s'\n", value);

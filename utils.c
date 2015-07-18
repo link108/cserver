@@ -21,8 +21,9 @@ void handleRequest(int socket, char in_buffer[], char* sender) {
   char * inKey, * inValue;
   char * outKey, * outValue;
   setKeyValue(&inKey, &inValue, in_buffer);
-  processKeyValue(&inKey, &inValue, &outKey, &outValue);
+  processKeyValue(&inKey, &inValue, &outKey, &outValue, sender);
   sendData(socket, outKey, outValue, sender);
+  usleep(50000);
 }
 
 void sendData(int socket, char* key, char* value, char* sender) {
@@ -33,12 +34,12 @@ void sendData(int socket, char* key, char* value, char* sender) {
   printf("Num: %d\n", num);
   sprintf(out_buffer, message_format, key, num - 1);
   printf("%s sent: '", sender);
-  printf("%s", out_buffer);
-  printf("\n");
+  printf("%s\n", out_buffer);
+  //printf("\n");
   int sentBytes = send(socket, out_buffer, strlen(out_buffer), 0);
   //printf("sent %d bytes from %s\n", sentBytes, sender);
   if (sentBytes == -1) {
-    printf("error: %s", strerror(errno));
+    printf("error: %s\n", strerror(errno));
   }
 }
 
@@ -49,18 +50,18 @@ void setKeyValue(char** key, char** value, char in_buffer[]) {
   *value = &in_buffer[colon_pos + 1];
 }
 
-void processKeyValue(char** inKey, char** inValue, char** outKey, char** outValue) {
+void processKeyValue(char** inKey, char** inValue, char** outKey, char** outValue, char* sender) {
   //printf("processing key/value on server side\n");
   if (0 == strcmp("decrement", *inKey)) {
-    printf("%s", "decrementing");
+    printf("%s\n", "decrementing");
     int retNum = atoi(*inValue);
     if (retNum == -1) {
-      printf("error: %s", strerror(errno));
+      printf("error: %s\n", strerror(errno));
     }
     retNum--;
     sprintf(*outValue, "%d", retNum);
     *outKey = *inKey;
-    printf("server: key: %s, value: %s", *outKey, *outValue);
+    printf("(utils.c) %s: key: %s, value: %s\n", sender, *outKey, *outValue);
   } 
   //else if ("increment" == *inKey)
   //*outKey = *inKey;

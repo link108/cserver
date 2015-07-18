@@ -9,7 +9,7 @@ void sendData(int, char*, char*, char*);
 
 void setKeyValue(char**, char**, char[]);
 
-void processKeyValue(char**, char**, char**, char**);
+void processKeyValue(char**, char**, char**, char**, char*);
 
 #endif
 
