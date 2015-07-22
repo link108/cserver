@@ -4,24 +4,30 @@
 #include<stdlib.h>
 #include<string.h>
 
+enum LogLevel {
+  INFO = 0,
+  WARN,
+  DEBUG
+};
+
 struct Logger {
   char * name;
   char ** msgs;
   int numMsgs;
-  int logLevel;
+  enum LogLevel logLevel;
 };
 
 void logMsg(struct Logger * log, int logLevel, char * msg) {
   if (logLevel <= log->logLevel) {
     if (strlen(msg) < 128) {
       strcpy(log->msgs[log->numMsgs], msg);
+      printf("%s: %s\n", log->name, log->msgs[log->numMsgs]);
+      log->numMsgs++;
     }
-    printf("%s: %s\n", log->name, log->msgs[log->numMsgs]);
-    log->numMsgs++;
   }
 }
 
-struct Logger * createLogger(char * name, int logLevel) {
+struct Logger * createLogger(char * name, enum LogLevel logLevel) {
   struct Logger * logger = malloc(sizeof(struct Logger));
   logger->name = malloc(strlen(name));
   logger->name = name;
@@ -35,9 +41,9 @@ struct Logger * createLogger(char * name, int logLevel) {
 }
 
 int main() {
-  struct Logger * logger = createLogger("simpleLogger", 3);
-  logMsg(logger, 0, "msg");
-  logMsg(logger, 0, "msg1");
-  logMsg(logger, 0, "msg2");
+  struct Logger * logger = createLogger("simpleLogger", INFO);
+  logMsg(logger, WARN, "msg");
+  logMsg(logger, INFO, "msg1");
+  logMsg(logger, DEBUG, "msg2");
   return 0;
 }
