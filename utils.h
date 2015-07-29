@@ -1,5 +1,5 @@
-#ifndef _utils_h
-#define _utils_h
+#ifndef __utils_h
+#define __utils_h
 
 void createSockaddr_in(struct sockaddr_in*, int, char*);
 

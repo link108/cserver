@@ -11,9 +11,17 @@
 #include<arpa/inet.h>
 #include<errno.h>
 #include "utils.h"
+#include "logger.c"
 
 void error(const char* msg) {
   perror(msg);
+}
+
+enum LogLevel LOG_LEVEL = INFO;
+static struct Logger * clientLogger;
+
+void cLog(char * msg) {
+  logMsg(clientLogger, LOG_LEVEL, msg);
 }
 
 int main() {

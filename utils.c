@@ -58,8 +58,12 @@ void processKeyValue(char** inKey, char** inValue, char** outKey, char** outValu
       printf("error: %s\n", strerror(errno));
     }
     retNum--;
+    if (retNum == 0) {
+      *outKey = "increment";
+    } else {
+      *outKey = *inKey;
+    }
     sprintf(*outValue, "%d", retNum);
-    *outKey = *inKey;
     printf("(utils.c) %s: key: %s, value: %s\n", sender, *outKey, *outValue);
   } 
   //else if ("increment" == *inKey)

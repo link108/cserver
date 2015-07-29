@@ -2,7 +2,6 @@
 // Basic test server
 
 // TODO what to replace stdio with? 
-
 #include<unistd.h>
 #include<stdio.h>
 #include<stdbool.h>
@@ -13,28 +12,35 @@
 #include<arpa/inet.h>
 #include<signal.h>
 #include<errno.h>
-#include "utils.h"
 #include<signal.h>
+#include "utils.h"
+#include "logger.c"
 
 static volatile int keepRunning = 1;
 int welcomeSocket;
+enum LogLevel LOG_LEVEL = INFO;
+static struct Logger * serverLogger;
 
-// dont think this does what I intend it to do.. close the port
+void cLog(char * msg) {
+  logMsg(serverLogger, LOG_LEVEL, msg);
+}
+
 void intHandler(int handle_this) {
   keepRunning = 0;
-  printf("closing: %d\n", welcomeSocket);
   close(welcomeSocket);
+  // TODO how to take in string(s) for formating? '...' arg? 
+  cLog("closing socket");
+  printf("\nclosing socket: %d\n", welcomeSocket);
   exit(0);
 }
 
 int main() {
   static const int SERVER_PORT = 7892;
-  //int welcomeSocket;
   char in_buffer[1024];
   struct sockaddr_in serverAddr;
   struct sockaddr_storage serverStorage;
   socklen_t addr_size;
-
+  serverLogger = createLogger(__FILE__, LOG_LEVEL);
   // set up socket, call to socket returns a file descriptor (fd)
   welcomeSocket = socket(AF_INET, SOCK_STREAM, 0);
   signal(SIGINT, intHandler);
@@ -43,14 +49,17 @@ int main() {
   int bindStatus = bind(welcomeSocket, (struct sockaddr *) &serverAddr, sizeof(serverAddr));
   if (bindStatus != 0) {
     printf("bind error: %s\n", strerror(errno));
+    cLog("bind error");
     exit(0);
   }
 
   do {
+    memset(in_buffer, 0, 1024);
     // max 5 connections... however only prints "Error!" if hits the limit
     int listenWelcomeSocket = listen(welcomeSocket, 5);
     //if(listen(welcomeSocket, 5) == 0) {
     if(listenWelcomeSocket == 0) {
+      cLog("Server Listening");
       printf("Server Listening\n");
       printf("welcomeSocket output: %d\n", listenWelcomeSocket);
      } else {
