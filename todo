@@ -1,7 +1,12 @@
 
-send 
+Data to send / log: 
 
 thread number
 id
 request
 value
+
+
+
+
+create logger that prints out file that created log line
